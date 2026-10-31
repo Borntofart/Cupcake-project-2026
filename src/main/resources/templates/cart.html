@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Kurv')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Din kurv</h1>
+
+    <p th:if="${cart.empty}">Kurven er tom. <a href="/">Bestil cupcakes</a></p>
+
+    <!-- Kurvens linjer med samlet pris (US-3) -->
+    <div th:unless="${cart.empty}" class="table-wrap">
+        <table>
+            <thead>
+            <tr><th>Bund</th><th>Top</th><th>Antal</th><th>Stykpris</th><th>Pris</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="line, stat : ${cart.lines}">
+                <td th:text="${line.bottom.name}">Chokolade</td>
+                <td th:text="${line.topping.name}">Blåbær</td>
+                <td th:text="${line.quantity}">1</td>
+                <td th:text="${line.unitPrice} + ' kr'">30 kr</td>
+                <td th:text="${line.linePrice} + ' kr'">30 kr</td>
+                <td>
+                    <!-- Fjern linje (US-7) -->
+                    <form method="post" action="/cart/remove">
+                        <input type="hidden" name="index" th:value="${stat.index}">
+                        <button type="submit" class="small danger">Fjern</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="4"><strong>Total</strong></td>
+                <td colspan="2"><strong th:text="${cart.total} + ' kr'">0 kr</strong></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <!-- Betal med saldo (US-1) -->
+        <form method="post" action="/checkout" class="checkout">
+            <button type="submit">Betal og bestil</button>
+        </form>
+        <p th:if="${currentUser == null}" class="hint">Du skal være logget ind for at betale.</p>
+    </div>
+</main>
+</body>
+</html>

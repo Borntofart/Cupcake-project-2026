@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Opret konto')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container narrow">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Opret konto</h1>
+
+    <!-- Opret profil (US-2) -->
+    <form method="post" action="/register" class="stack">
+        <label>Email
+            <input type="email" name="email" th:value="${email}" required>
+        </label>
+        <label>Kodeord
+            <input type="password" name="password" minlength="4" required>
+        </label>
+        <label>Gentag kodeord
+            <input type="password" name="repeat" minlength="4" required>
+        </label>
+        <button type="submit">Opret</button>
+    </form>
+
+    <p>Har du en konto? <a href="/login">Log ind</a></p>
+</main>
+</body>
+</html>

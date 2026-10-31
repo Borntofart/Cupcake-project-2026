@@ -10,6 +10,10 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserService { // Regler for login og oprettelse
 
     public static User login(String email, String password, ConnectionPool pool) throws DBexceptions { // log ind (US-4)
+        if (email == null || password == null) {
+            throw new IllegalArgumentException("Forkert email eller kodeord");
+        }
+        email = email.trim().toLowerCase();
         String hash = UserMapper.getPasswordHash(email, pool);
         if (hash == null || !BCrypt.checkpw(password, hash)) {
             throw new IllegalArgumentException("Forkert email eller kodeord");

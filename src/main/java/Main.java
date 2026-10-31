@@ -1,12 +1,9 @@
 import config.ThymeleafConfig;
-import controllers.ViewModel;
-import exceptions.DBexceptions;
+import controllers.ShopController;
+import controllers.UserController;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinThymeleaf;
 import persistence.ConnectionPool;
-import persistence.CupcakeMapper;
-
-import java.util.Map;
 
 public class Main { // Starter programmet
 
@@ -18,15 +15,7 @@ public class Main { // Starter programmet
             config.fileRenderer(new JavalinThymeleaf(ThymeleafConfig.templateEngine()));
         }).start(7070);
 
-        app.get("/", ctx -> { // Forside
-            Map<String, Object> model = ViewModel.base(ctx);
-            try {
-                model.put("bottoms", CupcakeMapper.getAllBottoms(pool));
-                model.put("toppings", CupcakeMapper.getAllToppings(pool));
-            } catch (DBexceptions e) {
-                model.put("error", e.getMessage());
-            }
-            ctx.render("index", model);
-        });
+        UserController.addRoutes(app, pool);
+        ShopController.addRoutes(app, pool);
     }
 }

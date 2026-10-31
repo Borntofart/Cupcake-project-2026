@@ -1,0 +1,99 @@
+/* Farver samlet ét sted */
+:root {
+    --brown: #3b2a20;
+    --pink: #e86a92;
+    --cream: #fff7f0;
+    --line: #ead9cc;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    color: var(--brown);
+    background: var(--cream);
+}
+
+/* Topmenu */
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    padding: 12px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.logo { max-height: 70px; max-width: 100%; }
+.nav { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.nav a { color: var(--brown); text-decoration: none; font-weight: 600; }
+.nav a:hover { color: var(--pink); }
+.user-info { font-size: 0.9rem; opacity: 0.8; }
+
+/* Indhold */
+.container { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
+.narrow { max-width: 420px; }
+.lead { font-size: 1.1rem; }
+
+/* Forside: bunde og toppe */
+.menu-grid { display: grid; gap: 16px; }
+@media (min-width: 700px) {
+    .menu-grid { grid-template-columns: 1fr 1fr; }
+}
+.price-list { list-style: none; padding: 0; margin: 0; }
+.price-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+/* Formularer */
+.order-form, .stack { display: grid; gap: 14px; }
+@media (min-width: 700px) {
+    .order-form { grid-template-columns: 1fr 1fr 120px auto; align-items: end; }
+}
+label { display: grid; gap: 4px; font-weight: 600; }
+input, select {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #fff;
+}
+button {
+    background: var(--pink);
+    color: #fff;
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+button:hover { filter: brightness(0.95); }
+button.small { padding: 6px 10px; font-size: 0.85rem; }
+button.danger { background: #c0392b; }
+
+/* Tabeller */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; }
+.checkout { margin-top: 16px; text-align: right; }
+
+/* Kort */
+.card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.card h2 { margin-top: 0; font-size: 1.15rem; }
+.meta { opacity: 0.7; margin-top: -8px; }
+
+/* Beskeder */
+.msg { background: #e3f6e8; padding: 10px; border-radius: 6px; }
+.error { background: #fde2e1; padding: 10px; border-radius: 6px; }
+.hint { text-align: right; opacity: 0.7; }

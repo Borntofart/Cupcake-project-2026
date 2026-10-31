@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Bestil')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Velkommen ombord</h1>
+    <p class="lead">Øens bedste cupcakes. Vælg og bestil her:</p>
+
+    <!-- Bestillingsform: bund, top og antal lægges i kurven (US-1) -->
+    <form method="post" action="/cart/add" class="order-form card">
+        <label>Bund
+            <select name="bottom" required>
+                <option value="">Vælg bund</option>
+                <option th:each="b : ${bottoms}" th:value="${b.bottomId}"
+                        th:text="${b.name} + ' (' + ${b.price} + ' kr)'">Chokolade</option>
+            </select>
+        </label>
+
+        <label>Top
+            <select name="topping" required>
+                <option value="">Vælg top</option>
+                <option th:each="t : ${toppings}" th:value="${t.toppingId}"
+                        th:text="${t.name} + ' (' + ${t.price} + ' kr)'">Blåbær</option>
+            </select>
+        </label>
+
+        <label>Antal
+            <input type="number" name="quantity" value="1" min="1" max="50" required>
+        </label>
+
+        <button type="submit">Læg i kurv</button>
+    </form>
+
+    <!-- Prisliste med bunde og toppe -->
+    <div class="menu-grid">
+        <section class="card">
+            <h2>Bunde</h2>
+            <ul class="price-list">
+                <li th:each="b : ${bottoms}">
+                    <span th:text="${b.name}">Chokolade</span>
+                    <span th:text="${b.price} + ' kr'">15 kr</span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="card">
+            <h2>Toppe</h2>
+            <ul class="price-list">
+                <li th:each="t : ${toppings}">
+                    <span th:text="${t.name}">Blåbær</span>
+                    <span th:text="${t.price} + ' kr'">15 kr</span>
+                </li>
+            </ul>
+        </section>
+    </div>
+</main>
+</body>
+</html>

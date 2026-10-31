@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+
+<!-- Fælles head som alle sider bruger -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | Copenhagen Cupcakes'">Cupcakes</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+<!-- Topmenu som alle sider bruger -->
+<header th:fragment="header" class="site-header">
+    <a href="/" class="logo-link">
+        <img src="/images/cupcakelogo.png" alt="Copenhagen Cupcakes" class="logo">
+    </a>
+    <nav class="nav">
+        <!-- Admin links, kun for admin -->
+        <a th:if="${currentUser != null and currentUser.admin}" href="/admin/orders">Alle ordrer</a>
+        <a th:if="${currentUser != null and currentUser.admin}" href="/admin/customers">Kunder</a>
+        <!-- Kunde links -->
+        <a th:if="${currentUser != null}" href="/orders">Mine ordrer</a>
+        <!-- Kurv med antal -->
+        <a href="/cart">Kurv (<span th:text="${cart.count}">0</span>)</a>
+        <!-- Email og saldo når man er logget på (US-4) -->
+        <span th:if="${currentUser != null}" class="user-info">
+            <span th:text="${currentUser.email}">mail@mail.dk</span>
+            · <span th:text="${currentUser.balance} + ' kr'">0 kr</span>
+        </span>
+        <a th:if="${currentUser != null}" href="/logout">Log ud</a>
+        <!-- Når man ikke er logget på -->
+        <a th:if="${currentUser == null}" href="/login">Log ind</a>
+    </nav>
+</header>
+
+<!-- Beskeder og fejl -->
+<div th:fragment="messages">
+    <p th:if="${message != null}" th:text="${message}" class="msg">Besked</p>
+    <p th:if="${error != null}" th:text="${error}" class="error">Fejl</p>
+</div>
+
+</body>
+</html>

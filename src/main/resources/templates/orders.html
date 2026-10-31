@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Mine ordrer')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Mine ordrer</h1>
+    <p th:if="${orders == null or orders.empty}">Du har ingen ordrer endnu.</p>
+
+    <!-- Et kort pr ordre med linjer og total -->
+    <section th:each="o : ${orders}" class="card">
+        <h2>Ordre nr. <span th:text="${o.orderId}">1</span></h2>
+        <p class="meta" th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">01-01-2026</p>
+        <ul>
+            <li th:each="l : ${o.lines}"
+                th:text="${l.quantity} + ' x ' + ${l.bottom.name} + ' / ' + ${l.topping.name} + ' = ' + ${l.linePrice} + ' kr'">
+                1 x Chokolade / Blåbær
+            </li>
+        </ul>
+        <p><strong th:text="'Total: ' + ${o.total} + ' kr'">Total</strong></p>
+    </section>
+</main>
+</body>
+</html>

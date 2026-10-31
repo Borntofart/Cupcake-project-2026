@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Log ind')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container narrow">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Log ind</h1>
+
+    <!-- Login med email og kodeord (US-4) -->
+    <form method="post" action="/login" class="stack">
+        <label>Email
+            <input type="email" name="email" th:value="${email}" required>
+        </label>
+        <label>Kodeord
+            <input type="password" name="password" required>
+        </label>
+        <button type="submit">Log ind</button>
+    </form>
+
+    <p>Ingen konto? <a href="/register">Opret en her</a></p>
+</main>
+</body>
+</html>
