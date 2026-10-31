@@ -5,21 +5,21 @@ import java.util.List;
 
 public class cart { // Indkøbskurv der ligger i sessionen
 
-    private final List<OrderLine> lines = new ArrayList<>(); // Linjerne i kurven
+    private final List<OrderLine> lines = new ArrayList<>();
 
     public void add(OrderLine line) { // Læg i kurv
-        lines.add(line); // Tilføj
+        lines.add(line);
     }
 
     public void remove(int index) { // Fjern linje (US-7)
         if (index >= 0 && index < lines.size()) {
-            lines.remove(index); // Fjern den for dælen
+            lines.remove(index);
         }
     }
 
     public List<OrderLine> getLines() {
         return lines;
-    } // Henter linjer
+    }
 
     public int getTotal() { // Samlet pris (US-3)
         return lines.stream().mapToInt(OrderLine::getLinePrice).sum();
@@ -30,10 +30,10 @@ public class cart { // Indkøbskurv der ligger i sessionen
     }
 
     public boolean isEmpty() { // Er kurven tom
-        return lines.isEmpty(); // Ja/nej
+        return lines.isEmpty();
     }
 
     public void clear() { // Tøm kurv efter betaling
-        lines.clear(); // Slet alt
+        lines.clear();
     }
 }

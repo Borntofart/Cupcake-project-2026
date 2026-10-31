@@ -1,24 +1,25 @@
-package entities; // dataklasser
+package entities;
 
 public class Bottom { // En cupcake bund
 
-    private final int bottomId; // Id
-    private final String name; // navn
-    private final int price; // Pris kr
+    private final int bottomId;
+    private final String name;
+    private final int price;
 
     public Bottom(int bottomId, String name, int price) { // Konstruktør
-        this.bottomId = bottomId;  // gfem id
-        this.name = name; // Gm navn
-        this.price = price; // Gem pris
+        this.bottomId = bottomId;
+        this.name = name;
+        this.price = price;
     }
 
+    // Getters
     public int getBottomId() {
         return bottomId;
-    } // henter id
+    }
     public String getName() {
         return name;
-    } // Henter navn
+    }
     public int getPrice() {
         return price;
-    } // genter pris
+    }
 }

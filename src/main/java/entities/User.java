@@ -2,32 +2,33 @@ package entities;
 
 public class User { // En bruger i systemet
 
-    private final int userId; // Id fra databasen
-    private final String email; // Email
-    private final String role; // customer eller admin
-    private final int balance; // Saldo i kr
+    private final int userId;
+    private final String email;
+    private final String role;
+    private final int balance;
 
     public User(int userId, String email, String role, int balance) { // Konstruktør
-        this.userId = userId; // Gem id
-        this.email = email; // gem email
-        this.role = role; // gem rolle
-        this.balance = balance; // Gem saldo
+        this.userId = userId;
+        this.email = email;
+        this.role = role;
+        this.balance = balance;
     }
 
+    // Getters
     public int getUserId() {
         return userId;
-    } // Hnter id
+    }
     public String getEmail() {
         return email;
-    } // Henter email
+    }
     public String getRole() {
         return role;
-    } // henter rolle
+    }
     public int getBalance() {
         return balance;
-    } // Henter saldo
+    }
 
     public boolean isAdmin() { // Er det en admin eller hva sir du
-        return "admin".equals(role); // tjek rollen
+        return "admin".equals(role);
     }
 }

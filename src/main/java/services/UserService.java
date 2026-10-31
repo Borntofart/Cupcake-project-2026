@@ -1,38 +1,38 @@
-package services; // Forretningslogik
+package services;
 
-import entities.User; // Bruger
+import entities.User;
 import exceptions.DBexceptions;
-import exceptions.DBexceptions; // Egen fejl
-import persistence.ConnectionPool; // Pool
-import persistence.UserMapper; // SQL for brugere
-import org.mindrot.jbcrypt.BCrypt; // Hashing
+import exceptions.DBexceptions;
+import persistence.ConnectionPool;
+import persistence.UserMapper;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService { // Regler for login og oprettelse
 
     public static User login(String email, String password, ConnectionPool pool) throws DBexceptions { // log ind (US-4)
-        String hash = UserMapper.getPasswordHash(email, pool); // hent gemt hash
-        if (hash == null || !BCrypt.checkpw(password, hash)) { // findes ikke eller forkert kode
-            throw new IllegalArgumentException("Forkert email eller kodeord"); // Samme besked begge steder
+        String hash = UserMapper.getPasswordHash(email, pool);
+        if (hash == null || !BCrypt.checkpw(password, hash)) {
+            throw new IllegalArgumentException("Forkert email eller kodeord");
         }
-        return UserMapper.getByEmail(email, pool); // Giv brugeren
+        return UserMapper.getByEmail(email, pool);
     }
 
     public static User register(String email, String password, String repeat, ConnectionPool pool) throws DBexceptions { //  konto (US-2)
-        if (email == null || !email.contains("@")) { //  email check
+        if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Skriv en gyldig email");
         }
-        if (password == null || password.length() < 4) { // For kort kode
+        if (password == null || password.length() < 4) {
             throw new IllegalArgumentException("Kodeordet skal være mindst 4 tegn");
         }
-        if (!password.equals(repeat)) { // Ikke ens
+        if (!password.equals(repeat)) {
             throw new IllegalArgumentException("Kodeordene er ikke ens");
         }
-        String hash = BCrypt.hashpw(password, BCrypt.gensalt()); //  hash
-        UserMapper.createUser(email.trim().toLowerCase(), hash, pool); // Gem i databasen
-        return UserMapper.getByEmail(email.trim().toLowerCase(), pool); // Hent den nye bruger
+        String hash = BCrypt.hashpw(password, BCrypt.gensalt());
+        UserMapper.createUser(email.trim().toLowerCase(), hash, pool);
+        return UserMapper.getByEmail(email.trim().toLowerCase(), pool);
     }
 
     public static User refresh(User user, ConnectionPool pool) throws DBexceptions { // hent ny saldo
-        return UserMapper.getById(user.getUserId(), pool); // fra databasen
+        return UserMapper.getById(user.getUserId(), pool);
     }
 }

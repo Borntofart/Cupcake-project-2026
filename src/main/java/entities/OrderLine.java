@@ -1,37 +1,38 @@
 package entities;
 
-public class OrderLine {
+public class OrderLine { // En linje: bund + top + antal
 
-    private final Bottom bottom; // Valgt bund
-    private final Topping topping; // Valgt top
-    private final int quantity; // Antal
-    private final int unitPrice; // Stykpris
+    private final Bottom bottom;
+    private final Topping topping;
+    private final int quantity;
+    private final int unitPrice;
 
     public OrderLine(Bottom bottom, Topping topping, int quantity) { // Ny linje fra kurven
-        this(bottom, topping, quantity, bottom.getPrice() + topping.getPrice()); // Pris = bund + top
+        this(bottom, topping, quantity, bottom.getPrice() + topping.getPrice());
     }
 
     public OrderLine(Bottom bottom, Topping topping, int quantity, int unitPrice) { // Linje fra databasen
-        this.bottom = bottom; // Gem bund
-        this.topping = topping; // Gem top
-        this.quantity = quantity; // Gem antal
-        this.unitPrice = unitPrice; // Gem stykpris
+        this.bottom = bottom;
+        this.topping = topping;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
     }
 
+    // Getters
     public Bottom getBottom() {
         return bottom;
-    } // henter bund
+    }
     public Topping getTopping() {
         return topping;
-    } // Henter top
+    }
     public int getQuantity() {
         return quantity;
-    } // henter antal
+    }
     public int getUnitPrice() {
         return unitPrice;
-    } // Henter stykpris
+    }
 
     public int getLinePrice() { // Pris for hele lartet
-        return unitPrice * quantity; // Stykpris gange per antal
+        return unitPrice * quantity;
     }
 }
