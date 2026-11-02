@@ -1,44 +1,106 @@
+
 <!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 
-<!-- fælles head som alle sider bruger -->
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="${title} + ' | Copenhagen Cupcakes'">Cupcakes</title>
+
+    <title th:text="${title} + ' | OLSKER CUPCAKES'">
+        OLSKER CUPCAKES
+    </title>
+
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-<!-- topmenu som alle sider bruger -->
+
 <header th:fragment="header" class="site-header">
-    <a href="/" class="logo-link">
-        <img src="/images/cupcakelogo.png" alt="Copenhagen Cupcakes" class="logo">
-    </a>
+
+    <div class="header-banner">
+        <div class="header-inner">
+
+            <a href="/" class="brand-link">
+                <img src="/images/olsker-logo.png"
+                     alt="OLSKER CUPCAKES"
+                     class="brand-image">
+            </a>
+
+            <img src="/images/cupcakelogo.png"
+                 alt="Cupcakes"
+                 class="cupcake-image">
+
+        </div>
+    </div>
+
     <nav class="nav">
-        <!-- Admin links, kun for admin -->
-        <a th:if="${currentUser != null and currentUser.admin}" href="/admin/orders">Alle ordrer</a>
-        <a th:if="${currentUser != null and currentUser.admin}" href="/admin/customers">Kunder</a>
-        <!-- Kunde links -->
-        <a th:if="${currentUser != null}" href="/orders">Mine ordrer</a>
-        <!-- Kurv med antal -->
-        <a href="/cart">Kurv (<span th:text="${cart.count}">0</span>)</a>
-        <!-- Email og saldo når man er logget på (US-4) -->
-        <span th:if="${currentUser != null}" class="user-info">
-            <span th:text="${currentUser.email}">mail@mail.dk</span>
-            · <span th:text="${currentUser.balance} + ' kr'">0 kr</span>
-        </span>
-        <a th:if="${currentUser != null}" href="/logout">Log ud</a>
-        <!-- Når man ikke er logget på -->
-        <a th:if="${currentUser == null}" href="/login">Log ind</a>
+
+        <div class="nav-links">
+
+            <a href="/">Forside</a>
+
+            <a href="/#bestil">Bestil cupcakes</a>
+
+            <a th:if="${currentUser != null and currentUser.admin}"
+               href="/admin/orders">
+                Ordrer
+            </a>
+
+            <a th:if="${currentUser != null and currentUser.admin}"
+               href="/admin/customers">
+                Kunder
+            </a>
+
+            <a th:if="${currentUser != null}"
+               href="/orders">
+                Mine ordrer
+            </a>
+
+        </div>
+
+        <div class="nav-links">
+
+            <span th:if="${currentUser != null}"
+                  th:text="${currentUser.email}"
+                  class="user-info">
+            </span>
+
+            <a href="/cart">
+                🛒 Kurv (<span th:text="${cart.count}">0</span>)
+            </a>
+
+            <a th:if="${currentUser == null}"
+               href="/login">
+                Log ind
+            </a>
+
+            <a th:if="${currentUser != null}"
+               href="/logout">
+                Log ud
+            </a>
+
+        </div>
+
     </nav>
+
 </header>
 
-<!-- Beskeder og fejl -->
-<div th:fragment="messages">
-    <p th:if="${message != null}" th:text="${message}" class="msg">Besked</p>
-    <p th:if="${error != null}" th:text="${error}" class="error">Fejl</p>
+<div th:fragment="messages" class="messages">
+
+    <p th:if="${message != null}"
+       th:text="${message}"
+       class="msg">
+    </p>
+
+    <p th:if="${error != null}"
+       th:text="${error}"
+       class="error">
+    </p>
+
 </div>
 
 </body>
 </html>
+
+
+

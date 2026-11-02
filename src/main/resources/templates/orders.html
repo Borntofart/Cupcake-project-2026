@@ -1,6 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments :: head('Mine ordrer')}"></head>
+
 <body>
 <header th:replace="~{fragments :: header}"></header>
 
@@ -8,20 +11,37 @@
     <div th:replace="~{fragments :: messages}"></div>
 
     <h1>Mine ordrer</h1>
-    <p th:if="${orders == null or orders.empty}">Du har ingen ordrer endnu.</p>
 
-    <!-- et kort pr ordre med linjer og total -->
-    <section th:each="o : ${orders}" class="card">
-        <h2>Ordre nr. <span th:text="${o.orderId}">1</span></h2>
-        <p class="meta" th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">01-01-2026</p>
-        <ul>
-            <li th:each="l : ${o.lines}"
-                th:text="${l.quantity} + ' x ' + ${l.bottom.name} + ' / ' + ${l.topping.name} + ' = ' + ${l.linePrice} + ' kr'">
-                1 x Chokolade / Blåbær
-            </li>
-        </ul>
-        <p><strong th:text="'Total: ' + ${o.total} + ' kr'">Total</strong></p>
-    </section>
+    <p th:if="${orders == null or orders.empty}">
+        Du har endnu ikke bestilt noget.
+    </p>
+
+    <div th:each="o : ${orders}" class="order-card">
+        <h2>
+            Ordre #<span th:text="${o.orderId}">1</span>
+        </h2>
+
+        <p>
+            Dato:
+            <span th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">
+                01-11-2026
+            </span>
+        </p>
+
+        <div class="order-items">
+            <p th:each="l : ${o.lines}"
+               th:text="${l.quantity} + ' x ' +
+               ${l.bottom.name} + ' med ' +
+               ${l.topping.name} + ' – ' +
+               ${l.linePrice} + ' kr'">
+            </p>
+        </div>
+
+        <p class="order-total">
+            Total:
+            <strong th:text="${o.total} + ' kr'">100 kr</strong>
+        </p>
+    </div>
 </main>
 </body>
 </html>
