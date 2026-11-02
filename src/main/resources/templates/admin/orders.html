@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Alle ordrer')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Alle ordrer</h1>
+    <p th:if="${orders == null or orders.empty}">Der er ingen ordrer.</p>
+
+    <!-- Tabel med alle ordrer i systemet (US-5) -->
+    <div th:unless="${orders == null or orders.empty}" class="table-wrap">
+        <table>
+            <thead>
+            <tr><th>Nr.</th><th>Kunde</th><th>Dato</th><th>Indhold</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="o : ${orders}">
+                <td th:text="${o.orderId}">1</td>
+                <td th:text="${o.email}">kunde@mail.dk</td>
+                <td th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">dato</td>
+                <td>
+                    <div th:each="l : ${o.lines}"
+                         th:text="${l.quantity} + ' x ' + ${l.bottom.name} + ' / ' + ${l.topping.name}">linje</div>
+                </td>
+                <td th:text="${o.total} + ' kr'">0 kr</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

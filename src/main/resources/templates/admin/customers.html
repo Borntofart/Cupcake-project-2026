@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Kunder')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+
+<main class="container">
+    <div th:replace="~{fragments :: messages}"></div>
+
+    <h1>Kunder</h1>
+    <p th:if="${customers == null or customers.empty}">Der er ingen kunder endnu.</p>
+
+    <!-- Et kort pr kunde med saldo og ordrer (US-6) -->
+    <section th:each="c : ${customers}" class="card"
+             th:with="cOrders=${ordersByUser.get(c.userId)}">
+        <h2 th:text="${c.email}">kunde@mail.dk</h2>
+        <p class="meta" th:text="'Saldo: ' + ${c.balance} + ' kr'">Saldo</p>
+
+        <p th:if="${cOrders == null}">Ingen ordrer.</p>
+        <ul th:unless="${cOrders == null}">
+            <li th:each="o : ${cOrders}"
+                th:text="'Ordre ' + ${o.orderId} + ' · ' + ${#temporals.format(o.createdAt, 'dd-MM-yyyy')} + ' · ' + ${o.total} + ' kr'">
+                Ordre 1
+            </li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>
