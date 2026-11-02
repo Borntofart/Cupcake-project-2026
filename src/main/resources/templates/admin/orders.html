@@ -14,7 +14,7 @@
     <div th:unless="${orders == null or orders.empty}" class="table-wrap">
         <table>
             <thead>
-            <tr><th>Nr.</th><th>Kunde</th><th>Dato</th><th>Indhold</th><th>Total</th></tr>
+            <tr><th>Nr.</th><th>Kunde</th><th>Dato</th><th>Indhold</th><th>Total</th><th></th></tr>
             </thead>
             <tbody>
             <tr th:each="o : ${orders}">
@@ -26,6 +26,14 @@
                          th:text="${l.quantity} + ' x ' + ${l.bottom.name} + ' / ' + ${l.topping.name}">linje</div>
                 </td>
                 <td th:text="${o.total} + ' kr'">0 kr</td>
+                <td>
+                    <!-- Slet ordre, spørger først (US-8) -->
+                    <form method="post" action="/admin/orders/delete"
+                          onsubmit="return confirm('Slet ordren?')">
+                        <input type="hidden" name="orderId" th:value="${o.orderId}">
+                        <button type="submit" class="small danger">Slet</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
