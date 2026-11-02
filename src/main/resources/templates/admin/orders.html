@@ -1,42 +1,74 @@
+
 <!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Alle ordrer')}"></head>
+
+<head th:replace="~{fragments :: head('Administration')}"></head>
+
 <body>
 <header th:replace="~{fragments :: header}"></header>
 
 <main class="container">
     <div th:replace="~{fragments :: messages}"></div>
 
-    <h1>Alle ordrer</h1>
-    <p th:if="${orders == null or orders.empty}">Der er ingen ordrer.</p>
+    <h1>Administration</h1>
 
-    <!-- Tabel med alle ordrer i systemet (US-5) -->
-    <div th:unless="${orders == null or orders.empty}" class="table-wrap">
-        <table>
-            <thead>
-            <tr><th>Nr.</th><th>Kunde</th><th>Dato</th><th>Indhold</th><th>Total</th><th></th></tr>
-            </thead>
-            <tbody>
-            <tr th:each="o : ${orders}">
-                <td th:text="${o.orderId}">1</td>
-                <td th:text="${o.email}">kunde@mail.dk</td>
-                <td th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">dato</td>
-                <td>
-                    <div th:each="l : ${o.lines}"
-                         th:text="${l.quantity} + ' x ' + ${l.bottom.name} + ' / ' + ${l.topping.name}">linje</div>
-                </td>
-                <td th:text="${o.total} + ' kr'">0 kr</td>
-                <td>
-                    <!-- Slet ordre, spørger først (US-8) -->
-                    <form method="post" action="/admin/orders/delete"
-                          onsubmit="return confirm('Slet ordren?')">
-                        <input type="hidden" name="orderId" th:value="${o.orderId}">
-                        <button type="submit" class="small danger">Slet</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <a href="/admin/orders" class="active">Ordrer</a>
+            <a href="/admin/customers">Kunder</a>
+            <a href="/">Forside</a>
+        </aside>
+
+        <section class="admin-content">
+            <h2>Ordreoversigt</h2>
+
+            <p th:if="${orders == null or orders.empty}">
+                Ingen ordrer endnu.
+            </p>
+
+            <div th:unless="${orders == null or orders.empty}"
+                 class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Ordrenr.</th>
+                        <th>Kunde</th>
+                        <th>Dato</th>
+                        <th>Total</th>
+                        <th>Handling</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="o : ${orders}">
+                        <td th:text="${o.orderId}">1</td>
+                        <td th:text="${o.email}">kunde@mail.dk</td>
+
+                        <td th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy')}">
+                            01-11-2026
+                        </td>
+
+                        <td th:text="${o.total} + ' kr'">100 kr</td>
+
+                        <td>
+                            <form method="post"
+                                  action="/admin/orders/delete"
+                                  onsubmit="return confirm('Slet ordren?')">
+
+                                <input type="hidden"
+                                       name="orderId"
+                                       th:value="${o.orderId}">
+
+                                <button type="submit" class="delete-button">
+                                    Slet
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 </main>
 </body>

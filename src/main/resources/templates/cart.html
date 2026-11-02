@@ -1,51 +1,83 @@
+
 <!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Kurv')}"></head>
+
+<head th:replace="~{fragments :: head('Indkøbskurv')}"></head>
+
 <body>
 <header th:replace="~{fragments :: header}"></header>
 
 <main class="container">
     <div th:replace="~{fragments :: messages}"></div>
 
-    <h1>Din kurv</h1>
+    <h1>Din indkøbskurv</h1>
 
-    <p th:if="${cart.empty}">Kurven er tom. <a href="/">Bestil cupcakes</a></p>
+    <p th:if="${cart.empty}">
+        Din kurv er tom.
+        <a href="/#bestil">Bestil cupcakes her</a>
+    </p>
 
-    <!-- kurvens linjer med samlet pris (US-3) -->
-    <div th:unless="${cart.empty}" class="table-wrap">
-        <table>
-            <thead>
-            <tr><th>Bund</th><th>Top</th><th>Antal</th><th>Stykpris</th><th>Pris</th><th></th></tr>
-            </thead>
-            <tbody>
-            <tr th:each="line, stat : ${cart.lines}">
-                <td th:text="${line.bottom.name}">Chokolade</td>
-                <td th:text="${line.topping.name}">Blåbær</td>
-                <td th:text="${line.quantity}">1</td>
-                <td th:text="${line.unitPrice} + ' kr'">30 kr</td>
-                <td th:text="${line.linePrice} + ' kr'">30 kr</td>
-                <td>
-                    <!-- Fjern linje (US-7) -->
-                    <form method="post" action="/cart/remove">
-                        <input type="hidden" name="index" th:value="${stat.index}">
-                        <button type="submit" class="small danger">Fjern</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="4"><strong>Total</strong></td>
-                <td colspan="2"><strong th:text="${cart.total} + ' kr'">0 kr</strong></td>
-            </tr>
-            </tfoot>
-        </table>
+    <div th:unless="${cart.empty}">
 
-        <!-- betal med saldo (US-1) -->
-        <form method="post" action="/checkout" class="checkout">
-            <button type="submit">Betal og bestil</button>
-        </form>
-        <p th:if="${currentUser == null}" class="hint">Du skal være logget ind for at betale.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Antal</th>
+                    <th>Pris</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="line, stat : ${cart.lines}">
+                    <td>
+                        <strong th:text="${line.bottom.name}">Chokolade</strong>
+                        <span> + </span>
+                        <span th:text="${line.topping.name}">Vanilje</span>
+                    </td>
+
+                    <td th:text="${line.quantity}">2</td>
+
+                    <td th:text="${line.linePrice} + ' kr'">
+                        50 kr
+                    </td>
+
+                    <td>
+                        <form method="post" action="/cart/remove">
+                            <input type="hidden"
+                                   name="index"
+                                   th:value="${stat.index}">
+
+                            <button type="submit" class="delete-button">
+                                Fjern
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary">
+            <span>Total:</span>
+            <strong th:text="${cart.total} + ' kr'">100 kr</strong>
+        </div>
+
+        <div class="cart-actions">
+            <a href="/#bestil" class="button button-light">
+                Fortsæt med at handle
+            </a>
+
+            <form method="post" action="/checkout">
+                <button type="submit">Gå til betaling</button>
+            </form>
+        </div>
+
+        <p th:if="${currentUser == null}" class="hint">
+            Du skal logge ind for at betale.
+        </p>
     </div>
 </main>
 </body>

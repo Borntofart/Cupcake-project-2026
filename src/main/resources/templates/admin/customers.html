@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments :: head('Kunder')}"></head>
@@ -6,24 +7,45 @@
 
 <main class="container">
     <div th:replace="~{fragments :: messages}"></div>
+    <h1>Administration</h1>
 
-    <h1>Kunder</h1>
-    <p th:if="${customers == null or customers.empty}">Der er ingen kunder endnu.</p>
+    <div class="admin-layout">
+        <aside class="admin-menu">
+            <a href="/admin/orders">Ordrer</a>
+            <a href="/admin/customers" class="active">Kunder</a>
+            <a href="/">Forside</a>
+        </aside>
 
-    <!-- Et kort pr kunde med saldo og ordrer (US-6) -->
-    <section th:each="c : ${customers}" class="card"
-             th:with="cOrders=${ordersByUser.get(c.userId)}">
-        <h2 th:text="${c.email}">kunde@mail.dk</h2>
-        <p class="meta" th:text="'Saldo: ' + ${c.balance} + ' kr'">Saldo</p>
+        <section>
+            <h2>Kunder</h2>
 
-        <p th:if="${cOrders == null}">Ingen ordrer.</p>
-        <ul th:unless="${cOrders == null}">
-            <li th:each="o : ${cOrders}"
-                th:text="'Ordre ' + ${o.orderId} + ' · ' + ${#temporals.format(o.createdAt, 'dd-MM-yyyy')} + ' · ' + ${o.total} + ' kr'">
-                Ordre 1
-            </li>
-        </ul>
-    </section>
+            <p th:if="${customers == null or customers.empty}">
+                Der er ingen kunder endnu.
+            </p>
+
+            <section th:each="c : ${customers}"
+                     class="panel"
+                     th:with="cOrders=${ordersByUser.get(c.userId)}">
+
+                <h3 th:text="${c.email}">kunde@mail.dk</h3>
+                <p th:text="'Saldo: ' + ${c.balance} + ' kr'">
+                    Saldo
+                </p>
+
+                <p th:if="${cOrders == null or cOrders.empty}">
+                    Ingen ordrer.
+                </p>
+
+                <ul th:unless="${cOrders == null or cOrders.empty}">
+                    <li th:each="o : ${cOrders}"
+                        th:text="'Ordre ' + ${o.orderId}
+                        + ' · ' + ${o.total} + ' kr'">
+                        Ordre
+                    </li>
+                </ul>
+            </section>
+        </section>
+    </div>
 </main>
 </body>
 </html>
