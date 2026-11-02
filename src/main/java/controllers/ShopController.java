@@ -12,9 +12,9 @@ import services.UserService;
 
 import java.util.Map;
 
-public class ShopController { // Kun HTTP for forside, kurv, betaling og mine ordrer
+public class ShopController { // kun HTTP/links for forside, kurv, betaling og mine ordrer
 
-    public static void addRoutes(Javalin app, ConnectionPool pool) { // Registrerer ruterne
+    public static void addRoutes(Javalin app, ConnectionPool pool) { // registrereriong af ruterne
         app.get("/", ctx -> index(ctx, pool));
         app.post("/cart/add", ctx -> addToCart(ctx, pool));
         app.get("/cart", ctx -> ctx.render("cart", ViewModel.base(ctx)));
@@ -23,7 +23,7 @@ public class ShopController { // Kun HTTP for forside, kurv, betaling og mine or
         app.get("/orders", ctx -> myOrders(ctx, pool));
     }
 
-    private static void index(Context ctx, ConnectionPool pool) { // GET / - forside med bestillingsform
+    private static void index(Context ctx, ConnectionPool pool) { // GET / forside med bestillingsform
         Map<String, Object> model = ViewModel.base(ctx);
         try {
             model.put("bottoms", CupcakeMapper.getAllBottoms(pool));
@@ -34,7 +34,7 @@ public class ShopController { // Kun HTTP for forside, kurv, betaling og mine or
         ctx.render("index", model);
     }
 
-    private static void addToCart(Context ctx, ConnectionPool pool) { // POST /cart/add (US-1)
+    private static void addToCart(Context ctx, ConnectionPool pool) { // POST /cart/add kan tilføje til din kurv(US-1)
         try {
             int bottomId = Integer.parseInt(ctx.formParam("bottom"));
             int toppingId = Integer.parseInt(ctx.formParam("topping"));
@@ -49,7 +49,7 @@ public class ShopController { // Kun HTTP for forside, kurv, betaling og mine or
         ctx.redirect("/");
     }
 
-    private static void removeFromCart(Context ctx) { // POST /cart/remove (US-7)
+    private static void removeFromCart(Context ctx) { // POST /cart/remove kan fjerne ting fra din kurv  (US-7)
         try {
             ViewModel.cart(ctx).remove(Integer.parseInt(ctx.formParam("index")));
         } catch (NumberFormatException ignored) {
@@ -57,7 +57,7 @@ public class ShopController { // Kun HTTP for forside, kurv, betaling og mine or
         ctx.redirect("/cart");
     }
 
-    private static void checkout(Context ctx, ConnectionPool pool) { // POST /checkout - betal med saldo (US-1)
+    private static void checkout(Context ctx, ConnectionPool pool) { // POST /checkout :kan betale med saldo (US-1)
         User user = ViewModel.currentUser(ctx);
         if (user == null) {
             ViewModel.flash(ctx, "Log ind eller opret en konto for at betale");
@@ -75,7 +75,7 @@ public class ShopController { // Kun HTTP for forside, kurv, betaling og mine or
         }
     }
 
-    private static void myOrders(Context ctx, ConnectionPool pool) { // GET /orders - kundens egne ordrer
+    private static void myOrders(Context ctx, ConnectionPool pool) { // GET /orders - kundens egne ordrer så de kan se dem
         User user = ViewModel.currentUser(ctx);
         if (user == null) {
             ctx.redirect("/login");

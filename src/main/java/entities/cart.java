@@ -7,11 +7,11 @@ public class cart { // Indkøbskurv der ligger i sessionen
 
     private final List<OrderLine> lines = new ArrayList<>();
 
-    public void add(OrderLine line) { // Læg i kurv
+    public void add(OrderLine line) { // læg i kurv
         lines.add(line);
     }
 
-    public void remove(int index) { // Fjern linje (US-7)
+    public void remove(int index) { // fjern linje (US-7)
         if (index >= 0 && index < lines.size()) {
             lines.remove(index);
         }
@@ -21,7 +21,7 @@ public class cart { // Indkøbskurv der ligger i sessionen
         return lines;
     }
 
-    public int getTotal() { // Samlet pris (US-3)
+    public int getTotal() { // samlet pris (US-3)
         return lines.stream().mapToInt(OrderLine::getLinePrice).sum();
     }
 
@@ -29,11 +29,11 @@ public class cart { // Indkøbskurv der ligger i sessionen
         return lines.stream().mapToInt(OrderLine::getQuantity).sum();
     }
 
-    public boolean isEmpty() { // Er kurven tom
+    public boolean isEmpty() { // Er kurven tom?
         return lines.isEmpty();
     }
 
-    public void clear() { // Tøm kurv efter betaling
+    public void clear() { // tøm kurv efter betaling
         lines.clear();
     }
 }

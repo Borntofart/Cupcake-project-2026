@@ -6,7 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionPool { // Singleton der deler forbindelser
+public class ConnectionPool { // pool der deler forbindelser
 
     private static ConnectionPool instance;
     private final HikariDataSource dataSource;

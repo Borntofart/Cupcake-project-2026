@@ -1,6 +1,6 @@
 package entities;
 
-public class Topping { // En cupcake top
+public class Topping { // en cupcake top
 
     private final int toppingId;
     private final String name;

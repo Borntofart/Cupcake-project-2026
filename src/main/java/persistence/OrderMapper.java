@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OrderMapper { // Kun SQL for ordrer og ordrelinjer
+public class OrderMapper { // kun SQL for ordrer og ordrelinjer
 
     private static final String SELECT_ORDERS = // Fælles SELECT med joins
             "SELECT o.order_id, o.user_id, o.created_at, u.email, " +

@@ -10,7 +10,7 @@ import persistence.ConnectionPool;
 import persistence.CupcakeMapper;
 import persistence.OrderMapper;
 
-public class OrderService { // Regler for kurv og betaling
+public class OrderService { // regler og forretningslogik for kurv og betaling
 
     public static void addToCart(cart cart, int bottomId, int toppingId, int quantity, ConnectionPool pool) throws DBexceptions { // Lægger en cupcake i kurven med priser fra databasen
         if (quantity < 1 || quantity > 50) {

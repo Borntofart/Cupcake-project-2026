@@ -12,7 +12,7 @@ public class Bottom { // En cupcake bund
         this.price = price;
     }
 
-    // Getters
+    // getters
     public int getBottomId() {
         return bottomId;
     }

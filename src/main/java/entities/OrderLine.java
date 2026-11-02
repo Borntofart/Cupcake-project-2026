@@ -1,6 +1,6 @@
 package entities;
 
-public class OrderLine { // En linje: bund + top + antal
+public class OrderLine { // en linje samlet : bund + top + antal
 
     private final Bottom bottom;
     private final Topping topping;

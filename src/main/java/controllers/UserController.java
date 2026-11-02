@@ -9,7 +9,7 @@ import services.UserService;
 
 import java.util.Map;
 
-public class UserController { // Kun HTTP for login, opret og log ud
+public class UserController { // kun HTTP/links for login, opret og log ud
 
     public static void addRoutes(Javalin app, ConnectionPool pool) { // Registrerer ruterne
         app.get("/login", ctx -> ctx.render("login", ViewModel.base(ctx)));
@@ -43,7 +43,7 @@ public class UserController { // Kun HTTP for login, opret og log ud
         }
     }
 
-    private static void logout(Context ctx) { // GET /logout - smider sessionen væk
+    private static void logout(Context ctx) { // GET /logout smider sessionen væk når man lopgger ud
         ctx.req().getSession().invalidate();
         ctx.redirect("/");
     }

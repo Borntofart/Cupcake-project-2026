@@ -1,8 +1,8 @@
 package exceptions;
 
-public class DBexceptions extends Exception { // Fejl fra databaselaget
+public class DBexceptions extends Exception { // fejl fra databaselaget
 
-    public DBexceptions(String message) { // Kun besked
+    public DBexceptions(String message) {
         super(message);
     }
 

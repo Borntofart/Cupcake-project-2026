@@ -2,12 +2,11 @@ package services;
 
 import entities.User;
 import exceptions.DBexceptions;
-import exceptions.DBexceptions;
 import persistence.ConnectionPool;
 import persistence.UserMapper;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class UserService { // Regler for login og oprettelse
+public class UserService { // regler for login og oprettelse
 
     public static User login(String email, String password, ConnectionPool pool) throws DBexceptions { // log ind (US-4)
         if (email == null || password == null) {

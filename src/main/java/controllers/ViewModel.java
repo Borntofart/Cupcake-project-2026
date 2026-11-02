@@ -32,16 +32,16 @@ public class ViewModel { // Data som alle sider skal bruge
                 return fresh;
             }
         } catch (DBexceptions e) {
-            // Database fejl: vis den gamle saldo i stedet for at crashe siden
+            // database fejl vis den gamle saldo i stedet for at crashe siden
         }
         return user;
     }
 
-    public static User currentUser(Context ctx) { // Hvem er logget på
+    public static User currentUser(Context ctx) { // hvem er logget på
         return ctx.sessionAttribute("currentUser");
     }
 
-    public static cart cart(Context ctx) { // Hent eller lav kurv
+    public static cart cart(Context ctx) { // hent eller lav kurv
         cart c = ctx.sessionAttribute("cart");
         if (c == null) {
             c = new cart();

@@ -10,7 +10,7 @@
     <h1>Mine ordrer</h1>
     <p th:if="${orders == null or orders.empty}">Du har ingen ordrer endnu.</p>
 
-    <!-- Et kort pr ordre med linjer og total -->
+    <!-- et kort pr ordre med linjer og total -->
     <section th:each="o : ${orders}" class="card">
         <h2>Ordre nr. <span th:text="${o.orderId}">1</span></h2>
         <p class="meta" th:text="${#temporals.format(o.createdAt, 'dd-MM-yyyy HH:mm')}">01-01-2026</p>

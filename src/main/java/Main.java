@@ -1,4 +1,5 @@
 import config.ThymeleafConfig;
+import controllers.AdminController;
 import controllers.ShopController;
 import controllers.UserController;
 import io.javalin.Javalin;
@@ -17,5 +18,6 @@ public class Main { // Starter programmet
 
         UserController.addRoutes(app, pool);
         ShopController.addRoutes(app, pool);
+        AdminController.addRoutes(app, pool);
     }
 }

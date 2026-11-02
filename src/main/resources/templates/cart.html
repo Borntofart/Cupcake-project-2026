@@ -11,7 +11,7 @@
 
     <p th:if="${cart.empty}">Kurven er tom. <a href="/">Bestil cupcakes</a></p>
 
-    <!-- Kurvens linjer med samlet pris (US-3) -->
+    <!-- kurvens linjer med samlet pris (US-3) -->
     <div th:unless="${cart.empty}" class="table-wrap">
         <table>
             <thead>
@@ -41,7 +41,7 @@
             </tfoot>
         </table>
 
-        <!-- Betal med saldo (US-1) -->
+        <!-- betal med saldo (US-1) -->
         <form method="post" action="/checkout" class="checkout">
             <button type="submit">Betal og bestil</button>
         </form>

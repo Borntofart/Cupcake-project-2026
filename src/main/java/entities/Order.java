@@ -19,11 +19,11 @@ public class Order { // En gemt ordre
         this.createdAt = createdAt;
     }
 
-    public void addLine(OrderLine line) { // Tilføj linje
+    public void addLine(OrderLine line) { // tilføj linje
         lines.add(line);
     }
 
-    // Getters
+    // getters
     public int getOrderId() {
         return orderId;
     }
