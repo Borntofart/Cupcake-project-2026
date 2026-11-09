@@ -1,7 +1,7 @@
 package controllers;
 
+import entities.Cart;
 import entities.User;
-import entities.cart;
 import exceptions.DBexceptions;
 import io.javalin.http.Context;
 import persistence.ConnectionPool;
@@ -15,7 +15,7 @@ public class ViewModel { // Data som alle sider skal bruge
     public static Map<String, Object> base(Context ctx) { // Grund model til templates
         Map<String, Object> model = new HashMap<>();
         model.put("currentUser", refreshedUser(ctx));
-        model.put("cart", cart(ctx));
+        model.put("Cart", cart(ctx));
         model.put("message", ctx.consumeSessionAttribute("flash"));
         return model;
     }
@@ -41,11 +41,11 @@ public class ViewModel { // Data som alle sider skal bruge
         return ctx.sessionAttribute("currentUser");
     }
 
-    public static cart cart(Context ctx) { // hent eller lav kurv
-        cart c = ctx.sessionAttribute("cart");
+    public static Cart cart(Context ctx) { // hent eller lav kurv
+        Cart c = ctx.sessionAttribute("Cart");
         if (c == null) {
-            c = new cart();
-            ctx.sessionAttribute("cart", c);
+            c = new Cart();
+            ctx.sessionAttribute("Cart", c);
         }
         return c;
     }

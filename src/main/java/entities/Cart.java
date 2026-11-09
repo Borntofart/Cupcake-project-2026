@@ -3,7 +3,7 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class cart { // Indkøbskurv der ligger i sessionen
+public class Cart { // Indkøbskurv der ligger i sessionen
 
     private final List<OrderLine> lines = new ArrayList<>();
 
@@ -21,7 +21,7 @@ public class cart { // Indkøbskurv der ligger i sessionen
         return lines;
     }
 
-    public int getTotal() { // samlet pris (US-3)
+    public int getTotal() { // samlet pris (US-3) Skal Unit testes
         return lines.stream().mapToInt(OrderLine::getLinePrice).sum();
     }
 

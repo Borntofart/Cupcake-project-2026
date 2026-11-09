@@ -1,10 +1,6 @@
 package persistence;
 
-import entities.Bottom;
-import entities.cart;
-import entities.Order;
-import entities.OrderLine;
-import entities.Topping;
+import entities.*;
 import exceptions.DBexceptions;
 
 import java.sql.Connection;
@@ -30,7 +26,7 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
             "JOIN bottoms b ON b.bottom_id = ol.bottom_id " +
             "JOIN toppings t ON t.topping_id = ol.topping_id ";
 
-    public static int createOrder(int userId, cart cart, ConnectionPool pool) throws DBexceptions { // Betal og gem (US-1)
+    public static int createOrder(int userId, Cart cart, ConnectionPool pool) throws DBexceptions { // Betal og gem (US-1)
         String withdrawSql = "UPDATE users SET balance = balance - ? WHERE user_id = ? AND balance >= ?";
         String orderSql = "INSERT INTO orders (user_id) VALUES (?)";
         String lineSql = "INSERT INTO orderlines (order_id, bottom_id, topping_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)";

@@ -4,7 +4,7 @@ import entities.Bottom;
 import entities.OrderLine;
 import entities.Topping;
 import entities.User;
-import entities.cart;
+import entities.Cart;
 import exceptions.DBexceptions;
 import persistence.ConnectionPool;
 import persistence.CupcakeMapper;
@@ -12,7 +12,7 @@ import persistence.OrderMapper;
 
 public class OrderService { // regler og forretningslogik for kurv og betaling
 
-    public static void addToCart(cart cart, int bottomId, int toppingId, int quantity, ConnectionPool pool) throws DBexceptions { // Lægger en cupcake i kurven med priser fra databasen
+    public static void addToCart(Cart cart, int bottomId, int toppingId, int quantity, ConnectionPool pool) throws DBexceptions { // Lægger en cupcake i kurven med priser fra databasen
         if (quantity < 1 || quantity > 50) {
             throw new IllegalArgumentException("Antal skal være mellem 1 og 50");
         }
@@ -21,7 +21,7 @@ public class OrderService { // regler og forretningslogik for kurv og betaling
         cart.add(new OrderLine(bottom, topping, quantity));
     }
 
-    public static int checkout(User user, cart cart, ConnectionPool pool) throws DBexceptions { // Betaler med saldoen og gemmer ordren (US-1)
+    public static int checkout(User user, Cart cart, ConnectionPool pool) throws DBexceptions { // Betaler med saldoen og gemmer ordren (US-1)
         if (cart.isEmpty()) {
             throw new IllegalArgumentException("Kurven er tom");
         }

@@ -16,9 +16,9 @@ public class ShopController { // kun HTTP/links for forside, kurv, betaling og m
 
     public static void addRoutes(Javalin app, ConnectionPool pool) { // registrereriong af ruterne
         app.get("/", ctx -> index(ctx, pool));
-        app.post("/cart/add", ctx -> addToCart(ctx, pool));
-        app.get("/cart", ctx -> ctx.render("cart", ViewModel.base(ctx)));
-        app.post("/cart/remove", ShopController::removeFromCart);
+        app.post("/Cart/add", ctx -> addToCart(ctx, pool));
+        app.get("/Cart", ctx -> ctx.render("Cart", ViewModel.base(ctx)));
+        app.post("/Cart/remove", ShopController::removeFromCart);
         app.post("/checkout", ctx -> checkout(ctx, pool));
         app.get("/orders", ctx -> myOrders(ctx, pool));
     }
@@ -34,7 +34,7 @@ public class ShopController { // kun HTTP/links for forside, kurv, betaling og m
         ctx.render("index", model);
     }
 
-    private static void addToCart(Context ctx, ConnectionPool pool) { // POST /cart/add kan tilføje til din kurv(US-1)
+    private static void addToCart(Context ctx, ConnectionPool pool) { // POST /Cart/add kan tilføje til din kurv(US-1)
         try {
             int bottomId = Integer.parseInt(ctx.formParam("bottom"));
             int toppingId = Integer.parseInt(ctx.formParam("topping"));
@@ -49,12 +49,12 @@ public class ShopController { // kun HTTP/links for forside, kurv, betaling og m
         ctx.redirect("/");
     }
 
-    private static void removeFromCart(Context ctx) { // POST /cart/remove kan fjerne ting fra din kurv  (US-7)
+    private static void removeFromCart(Context ctx) { // POST /Cart/remove kan fjerne ting fra din kurv  (US-7)
         try {
             ViewModel.cart(ctx).remove(Integer.parseInt(ctx.formParam("index")));
         } catch (NumberFormatException ignored) {
         }
-        ctx.redirect("/cart");
+        ctx.redirect("/Cart");
     }
 
     private static void checkout(Context ctx, ConnectionPool pool) { // POST /checkout :kan betale med saldo (US-1)
@@ -71,7 +71,7 @@ public class ShopController { // kun HTTP/links for forside, kurv, betaling og m
             ctx.redirect("/orders");
         } catch (IllegalArgumentException | DBexceptions e) {
             ViewModel.flash(ctx, e.getMessage());
-            ctx.redirect("/cart");
+            ctx.redirect("/Cart");
         }
     }
 
