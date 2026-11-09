@@ -12,12 +12,12 @@
 
     <h1>Din indkøbskurv</h1>
 
-    <p th:if="${cart.empty}">
+    <p th:if="${Cart.empty}">
         Din kurv er tom.
         <a href="/#bestil">Bestil cupcakes her</a>
     </p>
 
-    <div th:unless="${cart.empty}">
+    <div th:unless="${Cart.empty}">
 
         <div class="table-wrap">
             <table>
@@ -31,7 +31,7 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="line, stat : ${cart.lines}">
+                <tr th:each="line, stat : ${Cart.lines}">
                     <td>
                         <strong th:text="${line.bottom.name}">Chokolade</strong>
                         <span> + </span>
@@ -45,7 +45,7 @@
                     </td>
 
                     <td>
-                        <form method="post" action="/cart/remove">
+                        <form method="post" action="/Cart/remove">
                             <input type="hidden"
                                    name="index"
                                    th:value="${stat.index}">
@@ -62,7 +62,7 @@
 
         <div class="cart-summary">
             <span>Total:</span>
-            <strong th:text="${cart.total} + ' kr'">100 kr</strong>
+            <strong th:text="${Cart.total} + ' kr'">100 kr</strong>
         </div>
 
         <div class="cart-actions">
