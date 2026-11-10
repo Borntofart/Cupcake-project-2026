@@ -6,7 +6,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 public class ThymeleafConfig { // samlet Thymeleaf opsætning som vi køre
 
-    public static TemplateEngine templateEngine() { // bygger engine
+    public TemplateEngine templateEngine() { // bygger engine
         TemplateEngine engine = new TemplateEngine();
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setPrefix("templates/");

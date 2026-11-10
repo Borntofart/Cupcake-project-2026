@@ -2,25 +2,30 @@ package services;
 
 import entities.User;
 import exceptions.DBexceptions;
-import persistence.ConnectionPool;
 import persistence.UserMapper;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService { // regler for login og oprettelse
 
-    public static User login(String email, String password, ConnectionPool pool) throws DBexceptions { // log ind (US-4)
+    private final UserMapper userMapper;
+
+    public UserService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
+    public User login(String email, String password) throws DBexceptions { // log ind (US-4)
         if (email == null || password == null) {
             throw new IllegalArgumentException("Forkert email eller kodeord");
         }
         email = email.trim().toLowerCase();
-        String hash = UserMapper.getPasswordHash(email, pool);
+        String hash = userMapper.getPasswordHash(email);
         if (hash == null || !BCrypt.checkpw(password, hash)) {
             throw new IllegalArgumentException("Forkert email eller kodeord");
         }
-        return UserMapper.getByEmail(email, pool);
+        return userMapper.getByEmail(email);
     }
 
-    public static User register(String email, String password, String repeat, ConnectionPool pool) throws DBexceptions { //  konto (US-2)
+    public User register(String email, String password, String repeat) throws DBexceptions { //  konto (US-2)
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Skriv en gyldig email");
         }
@@ -31,11 +36,11 @@ public class UserService { // regler for login og oprettelse
             throw new IllegalArgumentException("Kodeordene er ikke ens");
         }
         String hash = BCrypt.hashpw(password, BCrypt.gensalt());
-        UserMapper.createUser(email.trim().toLowerCase(), hash, pool);
-        return UserMapper.getByEmail(email.trim().toLowerCase(), pool);
+        userMapper.createUser(email.trim().toLowerCase(), hash);
+        return userMapper.getByEmail(email.trim().toLowerCase());
     }
 
-    public static User refresh(User user, ConnectionPool pool) throws DBexceptions { // hent ny saldo
-        return UserMapper.getById(user.getUserId(), pool);
+    public User refresh(User user) throws DBexceptions { // hent ny saldo
+        return userMapper.getById(user.getUserId());
     }
 }

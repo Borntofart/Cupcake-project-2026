@@ -12,7 +12,13 @@ import java.util.List;
 
 public class UserMapper { // Kun SQL for users tabellen
 
-    public static String getPasswordHash(String email, ConnectionPool pool) throws DBexceptions { // Henter hash til login
+    private final ConnectionPool pool;
+
+    public UserMapper(ConnectionPool pool) {
+        this.pool = pool;
+    }
+
+    public String getPasswordHash(String email) throws DBexceptions { // Henter hash til login
         String sql = "SELECT password FROM users WHERE email = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -26,7 +32,7 @@ public class UserMapper { // Kun SQL for users tabellen
         }
     }
 
-    public static User getByEmail(String email, ConnectionPool pool) throws DBexceptions { // Hent bruger på email
+    public User getByEmail(String email) throws DBexceptions { // Hent bruger på email
         String sql = "SELECT user_id, email, role, balance FROM users WHERE email = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -41,7 +47,7 @@ public class UserMapper { // Kun SQL for users tabellen
 
     }
 
-    public static User getById(int userId, ConnectionPool pool) throws DBexceptions { // hent bruger på id (frisk saldo)
+    public User getById(int userId) throws DBexceptions { // hent bruger på id (frisk saldo)
         String sql = "SELECT user_id, email, role, balance FROM users WHERE user_id = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -55,7 +61,7 @@ public class UserMapper { // Kun SQL for users tabellen
         }
     }
 
-    public static void createUser(String email, String passwordHash, ConnectionPool pool) throws DBexceptions { // Opret kunde (US-2)
+    public void createUser(String email, String passwordHash) throws DBexceptions { // Opret kunde (US-2)
         String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -71,7 +77,7 @@ public class UserMapper { // Kun SQL for users tabellen
 
     }
 
-    public static List<User> getAllCustomers(ConnectionPool pool) throws DBexceptions { // Alle kunder (US-6)
+    public List<User> getAllCustomers() throws DBexceptions { // Alle kunder (US-6)
         String sql = "SELECT user_id, email, role, balance FROM users WHERE role = 'customer' ORDER BY email";
         List<User> users = new ArrayList<>();
 
@@ -90,7 +96,7 @@ public class UserMapper { // Kun SQL for users tabellen
         }
     }
 
-    private static User map(ResultSet rs) throws SQLException { // Række til objekt
+    private User map(ResultSet rs) throws SQLException { // Række til objekt
         return new User(
                 rs.getInt("user_id"),
                 rs.getString("email"),

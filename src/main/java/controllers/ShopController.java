@@ -4,7 +4,6 @@ import entities.User;
 import exceptions.DBexceptions;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import persistence.ConnectionPool;
 import persistence.CupcakeMapper;
 import persistence.OrderMapper;
 import services.OrderService;
@@ -14,76 +13,91 @@ import java.util.Map;
 
 public class ShopController { // kun HTTP/links for forside, kurv, betaling og mine ordrer
 
-    public static void addRoutes(Javalin app, ConnectionPool pool) { // registrereriong af ruterne
-        app.get("/", ctx -> index(ctx, pool));
-        app.post("/Cart/add", ctx -> addToCart(ctx, pool));
-        app.get("/Cart", ctx -> ctx.render("Cart", ViewModel.base(ctx)));
-        app.post("/Cart/remove", ShopController::removeFromCart);
-        app.post("/checkout", ctx -> checkout(ctx, pool));
-        app.get("/orders", ctx -> myOrders(ctx, pool));
+    private final OrderService orderService;
+    private final UserService userService;
+    private final CupcakeMapper cupcakeMapper;
+    private final OrderMapper orderMapper;
+    private final ViewModel viewModel;
+
+    public ShopController(OrderService orderService, UserService userService, CupcakeMapper cupcakeMapper,
+                          OrderMapper orderMapper, ViewModel viewModel) {
+        this.orderService = orderService;
+        this.userService = userService;
+        this.cupcakeMapper = cupcakeMapper;
+        this.orderMapper = orderMapper;
+        this.viewModel = viewModel;
     }
 
-    private static void index(Context ctx, ConnectionPool pool) { // GET / forside med bestillingsform
-        Map<String, Object> model = ViewModel.base(ctx);
+    public void addRoutes(Javalin app) { // registrereriong af ruterne
+        app.get("/", this::index);
+        app.post("/Cart/add", this::addToCart);
+        app.get("/Cart", ctx -> ctx.render("Cart", viewModel.base(ctx)));
+        app.post("/Cart/remove", this::removeFromCart);
+        app.post("/checkout", this::checkout);
+        app.get("/orders", this::myOrders);
+    }
+
+    private void index(Context ctx) { // GET / forside med bestillingsform
+        Map<String, Object> model = viewModel.base(ctx);
         try {
-            model.put("bottoms", CupcakeMapper.getAllBottoms(pool));
-            model.put("toppings", CupcakeMapper.getAllToppings(pool));
+            model.put("bottoms", cupcakeMapper.getAllBottoms());
+            model.put("toppings", cupcakeMapper.getAllToppings());
         } catch (DBexceptions e) {
             model.put("error", e.getMessage());
         }
         ctx.render("index", model);
     }
 
-    private static void addToCart(Context ctx, ConnectionPool pool) { // POST /Cart/add kan tilføje til din kurv(US-1)
+    private void addToCart(Context ctx) { // POST /Cart/add kan tilføje til din kurv(US-1)
         try {
             int bottomId = Integer.parseInt(ctx.formParam("bottom"));
             int toppingId = Integer.parseInt(ctx.formParam("topping"));
             int quantity = Integer.parseInt(ctx.formParam("quantity"));
-            OrderService.addToCart(ViewModel.cart(ctx), bottomId, toppingId, quantity, pool);
-            ViewModel.flash(ctx, "Lagt i kurven");
+            orderService.addToCart(viewModel.cart(ctx), bottomId, toppingId, quantity);
+            viewModel.flash(ctx, "Lagt i kurven");
         } catch (NumberFormatException e) {
-            ViewModel.flash(ctx, "Vælg både bund, top og antal");
+            viewModel.flash(ctx, "Vælg både bund, top og antal");
         } catch (IllegalArgumentException | DBexceptions e) {
-            ViewModel.flash(ctx, e.getMessage());
+            viewModel.flash(ctx, e.getMessage());
         }
         ctx.redirect("/");
     }
 
-    private static void removeFromCart(Context ctx) { // POST /Cart/remove kan fjerne ting fra din kurv  (US-7)
+    private void removeFromCart(Context ctx) { // POST /Cart/remove kan fjerne ting fra din kurv  (US-7)
         try {
-            ViewModel.cart(ctx).remove(Integer.parseInt(ctx.formParam("index")));
+            viewModel.cart(ctx).remove(Integer.parseInt(ctx.formParam("index")));
         } catch (NumberFormatException ignored) {
         }
         ctx.redirect("/Cart");
     }
 
-    private static void checkout(Context ctx, ConnectionPool pool) { // POST /checkout :kan betale med saldo (US-1)
-        User user = ViewModel.currentUser(ctx);
+    private void checkout(Context ctx) { // POST /checkout :kan betale med saldo (US-1)
+        User user = viewModel.currentUser(ctx);
         if (user == null) {
-            ViewModel.flash(ctx, "Log ind eller opret en konto for at betale");
+            viewModel.flash(ctx, "Log ind eller opret en konto for at betale");
             ctx.redirect("/login");
             return;
         }
         try {
-            User fresh = UserService.refresh(user, pool);
-            int orderId = OrderService.checkout(fresh, ViewModel.cart(ctx), pool);
-            ViewModel.flash(ctx, "Tak! Ordre nr. " + orderId + " er betalt og klar til afhentning");
+            User fresh = userService.refresh(user);
+            int orderId = orderService.checkout(fresh, viewModel.cart(ctx));
+            viewModel.flash(ctx, "Tak! Ordre nr. " + orderId + " er betalt og klar til afhentning");
             ctx.redirect("/orders");
         } catch (IllegalArgumentException | DBexceptions e) {
-            ViewModel.flash(ctx, e.getMessage());
+            viewModel.flash(ctx, e.getMessage());
             ctx.redirect("/Cart");
         }
     }
 
-    private static void myOrders(Context ctx, ConnectionPool pool) { // GET /orders - kundens egne ordrer så de kan se dem
-        User user = ViewModel.currentUser(ctx);
+    private void myOrders(Context ctx) { // GET /orders - kundens egne ordrer så de kan se dem
+        User user = viewModel.currentUser(ctx);
         if (user == null) {
             ctx.redirect("/login");
             return;
         }
-        Map<String, Object> model = ViewModel.base(ctx);
+        Map<String, Object> model = viewModel.base(ctx);
         try {
-            model.put("orders", OrderMapper.getOrdersByUser(user.getUserId(), pool));
+            model.put("orders", orderMapper.getOrdersByUser(user.getUserId()));
         } catch (DBexceptions e) {
             model.put("error", e.getMessage());
         }

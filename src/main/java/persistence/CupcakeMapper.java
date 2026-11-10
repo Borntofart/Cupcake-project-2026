@@ -12,7 +12,13 @@ import java.util.List;
 
 public class CupcakeMapper { // Kun SQL for bunde og toppe
 
-    public static List<Bottom> getAllBottoms(ConnectionPool pool) throws DBexceptions { // Alle bunde
+    private final ConnectionPool pool;
+
+    public CupcakeMapper(ConnectionPool pool) {
+        this.pool = pool;
+    }
+
+    public List<Bottom> getAllBottoms() throws DBexceptions { // Alle bunde
         String sql = "SELECT bottom_id, name, price FROM bottoms ORDER BY price, name";
         List<Bottom> list = new ArrayList<>();
 
@@ -30,7 +36,7 @@ public class CupcakeMapper { // Kun SQL for bunde og toppe
         }
     }
 
-    public static List<Topping> getAllToppings(ConnectionPool pool) throws DBexceptions { // Alle toppe
+    public List<Topping> getAllToppings() throws DBexceptions { // Alle toppe
         String sql = "SELECT topping_id, name, price FROM toppings ORDER BY price, name";
         List<Topping> list = new ArrayList<>();
         try (Connection con = pool.getConnection();
@@ -46,7 +52,7 @@ public class CupcakeMapper { // Kun SQL for bunde og toppe
         }
     }
 
-    public static Bottom getBottomById(int id, ConnectionPool pool) throws DBexceptions { // Én bund
+    public Bottom getBottomById(int id) throws DBexceptions { // Én bund
         String sql = "SELECT bottom_id, name, price FROM bottoms WHERE bottom_id = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -61,7 +67,7 @@ public class CupcakeMapper { // Kun SQL for bunde og toppe
         }
     }
 
-    public static Topping getToppingById(int id, ConnectionPool pool) throws DBexceptions { // en top
+    public Topping getToppingById(int id) throws DBexceptions { // en top
         String sql = "SELECT topping_id, name, price FROM toppings WHERE topping_id = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {

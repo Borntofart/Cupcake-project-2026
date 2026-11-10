@@ -26,7 +26,13 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
             "JOIN bottoms b ON b.bottom_id = ol.bottom_id " +
             "JOIN toppings t ON t.topping_id = ol.topping_id ";
 
-    public static int createOrder(int userId, Cart cart, ConnectionPool pool) throws DBexceptions { // Betal og gem (US-1)
+    private final ConnectionPool pool;
+
+    public OrderMapper(ConnectionPool pool) {
+        this.pool = pool;
+    }
+
+    public int createOrder(int userId, Cart cart) throws DBexceptions { // Betal og gem (US-1)
         String withdrawSql = "UPDATE users SET balance = balance - ? WHERE user_id = ? AND balance >= ?";
         String orderSql = "INSERT INTO orders (user_id) VALUES (?)";
         String lineSql = "INSERT INTO orderlines (order_id, bottom_id, topping_id, quantity, unit_price) VALUES (?, ?, ?, ?, ?)";
@@ -77,7 +83,7 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
         }
     }
 
-    public static List<Order> getAllOrders(ConnectionPool pool) throws DBexceptions { // Alle ordrer (US-5)
+    public List<Order> getAllOrders() throws DBexceptions { // Alle ordrer (US-5)
         String sql = SELECT_ORDERS + "ORDER BY o.order_id DESC, ol.orderline_id";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -88,7 +94,7 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
         }
     }
 
-    public static List<Order> getOrdersByUser(int userId, ConnectionPool pool) throws DBexceptions { // En kundes ordrer
+    public List<Order> getOrdersByUser(int userId) throws DBexceptions { // En kundes ordrer
         String sql = SELECT_ORDERS + "WHERE o.user_id = ? ORDER BY o.order_id DESC, ol.orderline_id";
         try (Connection con = pool.getConnection();
 
@@ -101,7 +107,7 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
         }
     }
 
-    public static void deleteOrder(int orderId, ConnectionPool pool) throws DBexceptions { // Slet ordre (US-8)
+    public void deleteOrder(int orderId) throws DBexceptions { // Slet ordre (US-8)
         String sql = "DELETE FROM orders WHERE order_id = ?";
         try (Connection con = pool.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -112,7 +118,7 @@ public class OrderMapper { // kun SQL for ordrer og ordrelinjer
         }
     }
 
-    private static List<Order> mapOrders(ResultSet rs) throws SQLException { // rækker til ordrer med linjer
+    private List<Order> mapOrders(ResultSet rs) throws SQLException { // rækker til ordrer med linjer
         Map<Integer, Order> orders = new LinkedHashMap<>();
         while (rs.next()) {
 

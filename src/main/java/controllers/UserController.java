@@ -4,52 +4,59 @@ import entities.User;
 import exceptions.DBexceptions;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-import persistence.ConnectionPool;
 import services.UserService;
 
 import java.util.Map;
 
 public class UserController { // kun HTTP/links for login, opret og log ud
 
-    public static void addRoutes(Javalin app, ConnectionPool pool) { // Registrerer ruterne
-        app.get("/login", ctx -> ctx.render("login", ViewModel.base(ctx)));
-        app.post("/login", ctx -> login(ctx, pool));
-        app.get("/register", ctx -> ctx.render("register", ViewModel.base(ctx)));
-        app.post("/register", ctx -> register(ctx, pool));
-        app.get("/logout", UserController::logout);
+    private final UserService userService;
+    private final ViewModel viewModel;
+
+    public UserController(UserService userService, ViewModel viewModel) {
+        this.userService = userService;
+        this.viewModel = viewModel;
     }
 
-    private static void login(Context ctx, ConnectionPool pool) { // POST /login (US-4)
+    public void addRoutes(Javalin app) { // Registrerer ruterne
+        app.get("/login", ctx -> ctx.render("login", viewModel.base(ctx)));
+        app.post("/login", this::login);
+        app.get("/register", ctx -> ctx.render("register", viewModel.base(ctx)));
+        app.post("/register", this::register);
+        app.get("/logout", this::logout);
+    }
+
+    private void login(Context ctx) { // POST /login (US-4)
         String email = ctx.formParam("email");
         try {
-            User user = UserService.login(email, ctx.formParam("password"), pool);
+            User user = userService.login(email, ctx.formParam("password"));
             ctx.sessionAttribute("currentUser", user);
-            ViewModel.flash(ctx, "Velkommen " + user.getEmail());
+            viewModel.flash(ctx, "Velkommen " + user.getEmail());
             ctx.redirect(user.isAdmin() ? "/admin/orders" : "/");
         } catch (IllegalArgumentException | DBexceptions e) {
             showFormWithError(ctx, "login", email, e.getMessage());
         }
     }
 
-    private static void register(Context ctx, ConnectionPool pool) { // POST /register (US-2)
+    private void register(Context ctx) { // POST /register (US-2)
         String email = ctx.formParam("email");
         try {
-            User user = UserService.register(email, ctx.formParam("password"), ctx.formParam("repeat"), pool);
+            User user = userService.register(email, ctx.formParam("password"), ctx.formParam("repeat"));
             ctx.sessionAttribute("currentUser", user);
-            ViewModel.flash(ctx, "Din konto er oprettet");
+            viewModel.flash(ctx, "Din konto er oprettet");
             ctx.redirect("/");
         } catch (IllegalArgumentException | DBexceptions e) {
             showFormWithError(ctx, "register", email, e.getMessage());
         }
     }
 
-    private static void logout(Context ctx) { // GET /logout smider sessionen væk når man lopgger ud
+    private void logout(Context ctx) { // GET /logout smider sessionen væk når man lopgger ud
         ctx.req().getSession().invalidate();
         ctx.redirect("/");
     }
 
-    private static void showFormWithError(Context ctx, String page, String email, String error) { // Viser formen igen med fejl og email udfyldt
-        Map<String, Object> model = ViewModel.base(ctx);
+    private void showFormWithError(Context ctx, String page, String email, String error) { // Viser formen igen med fejl og email udfyldt
+        Map<String, Object> model = viewModel.base(ctx);
         model.put("error", error);
         model.put("email", email);
         ctx.render(page, model);
