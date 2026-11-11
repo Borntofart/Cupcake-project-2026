@@ -13,110 +13,208 @@
     <div th:replace="~{fragments :: messages}"></div>
 
     <section class="hero">
-
         <h1>Velkommen ombord</h1>
-
         <p>
-            Øens bedste cupcakes. Vælg din yndlingsbund
-            og topping, og sammensæt din helt egen cupcake.
+            Øens bedste cupcakes. Vælg din yndlingsbund og topping,
+            og sammensæt din helt egen cupcake.
         </p>
-
-        <a href="#bestil" class="button">
-            Byg din cupcake
-        </a>
-
+        <a href="#bestil" class="button">Byg din cupcake</a>
     </section>
 
     <section class="benefits">
-
         <span>♡ Friske råvarer</span>
-
         <span>✦ Håndlavede cupcakes</span>
-
         <span>✓ Nem bestilling</span>
-
     </section>
 
     <section id="bestil" class="builder">
 
         <h1>Byg din cupcake</h1>
 
-        <form method="post"
-              action="/Cart/add"
-              class="builder-form">
+        <div class="cupcake-layout">
 
-            <div class="selection-box">
+            <!-- VENSTRE SIDE: VALGMULIGHEDER -->
+            <div class="cupcake-options">
 
-                <h2>Vælg bund</h2>
+                <form method="post"
+                      action="/Cart/add"
+                      class="builder-form">
 
-                <label class="radio-line"
-                       th:each="bottom : ${bottoms}">
+                    <div class="selection-box">
+                        <h2>Vælg bund</h2>
 
-                    <input type="radio"
-                           name="bottom"
-                           th:value="${bottom.bottomId}"
-                           required>
+                        <label class="radio-line"
+                               th:each="bottom : ${bottoms}">
 
-                    <span th:text="${bottom.name}">
-                        Chokolade
-                    </span>
+                            <input type="radio"
+                                   name="bottom"
+                                   th:value="${bottom.bottomId}"
+                                   required>
 
-                    <span th:text="'(' + ${bottom.price} + ' kr)'">
-                        (15 kr)
-                    </span>
+                            <span th:text="${bottom.name}">
+                                Chokolade
+                            </span>
 
-                </label>
+                            <span th:text="'(' + ${bottom.price} + ' kr)'">
+                                (15 kr)
+                            </span>
+
+                        </label>
+                    </div>
+
+                    <div class="selection-box">
+                        <h2>Vælg topping</h2>
+
+                        <label class="radio-line"
+                               th:each="topping : ${toppings}">
+
+                            <input type="radio"
+                                   name="topping"
+                                   th:value="${topping.toppingId}"
+                                   required>
+
+                            <span th:text="${topping.name}">
+                                Hindbær
+                            </span>
+
+                            <span th:text="'(' + ${topping.price} + ' kr)'">
+                                (15 kr)
+                            </span>
+
+                        </label>
+                    </div>
+
+                    <div class="builder-footer">
+
+                        <label class="quantity-label">
+                            Antal cupcakes
+
+                            <input type="number"
+                                   name="quantity"
+                                   value="1"
+                                   min="1"
+                                   max="50"
+                                   required>
+                        </label>
+
+                        <button type="submit">
+                            Læg i kurv 🛒
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
-            <div class="selection-box">
+            <!-- HØJRE SIDE: INTERAKTIV CUPCAKE -->
+            <div class="cupcake-preview">
 
-                <h2>Vælg topping</h2>
+                <h2>Din cupcake 🧁</h2>
 
-                <label class="radio-line"
-                       th:each="topping : ${toppings}">
+                <div class="cupcake">
+                    <div id="frosting" class="frosting"></div>
+                    <div id="cake-bottom" class="cake-bottom"></div>
+                </div>
 
-                    <input type="radio"
-                           name="topping"
-                           th:value="${topping.toppingId}"
-                           required>
-
-                    <span th:text="${topping.name}">
-                        Hindbær
-                    </span>
-
-                    <span th:text="'(' + ${topping.price} + ' kr)'">
-                        (15 kr)
-                    </span>
-
-                </label>
+                <p id="cupcake-description">
+                    Vælg bund og topping
+                </p>
 
             </div>
 
-            <div class="builder-footer">
-
-                <label class="quantity-label">
-                    Antal cupcakes
-
-                    <input type="number"
-                           name="quantity"
-                           value="1"
-                           min="1"
-                           max="50"
-                           required>
-                </label>
-
-                <button type="submit">
-                    Læg i kurv 🛒
-                </button>
-
-            </div>
-
-        </form>
+        </div>
 
     </section>
 
 </main>
+
+<!-- INTERAKTIV CUPCAKE -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const bottoms = document.querySelectorAll(
+            'input[name="bottom"]'
+        );
+
+        const toppings = document.querySelectorAll(
+            'input[name="topping"]'
+        );
+
+        const cake = document.getElementById("cake-bottom");
+        const frosting = document.getElementById("frosting");
+        const description = document.getElementById("cupcake-description");
+
+        const bottomColors = {
+            "Chokolade": "#754329",
+            "Vanilje": "#E8C78E",
+            "Pistacie": "#A8B979",
+            "Mandel": "#C89C68",
+            "Muskatnød": "#B88153"
+        };
+
+        const toppingColors = {
+            "Hindbær": "#E58EAD",
+            "Blåbær": "#9070C5",
+            "Chokolade": "#73442E",
+            "Jordbær": "#ED8198",
+            "Citron": "#F2D66D",
+            "Crisp": "#C79D65",
+            "Rom/rosin": "#B89B80",
+            "Appelsin": "#F3A64A",
+            "Blåskimmelost": "#B9C4A4"
+        };
+
+        function getSelectedName(inputName) {
+            const selected = document.querySelector(
+                `input[name="${inputName}"]:checked`
+            );
+
+            if (!selected) {
+                return null;
+            }
+
+            return selected.closest("label")
+                .querySelector("span")
+                .textContent.trim();
+        }
+
+        function updateCupcake() {
+
+            const bottomName = getSelectedName("bottom");
+            const toppingName = getSelectedName("topping");
+
+            if (bottomName) {
+                cake.style.backgroundColor =
+                    bottomColors[bottomName] || "#E8C78E";
+            }
+
+            if (toppingName) {
+                frosting.style.backgroundColor =
+                    toppingColors[toppingName] || "#E58EAD";
+            }
+
+            if (bottomName && toppingName) {
+                description.textContent =
+                    bottomName + " med " + toppingName;
+            } else {
+                description.textContent =
+                    "Vælg bund og topping";
+            }
+        }
+
+        bottoms.forEach(input => {
+            input.addEventListener("change", updateCupcake);
+        });
+
+        toppings.forEach(input => {
+            input.addEventListener("change", updateCupcake);
+        });
+
+        updateCupcake();
+
+    });
+</script>
 
 </body>
 </html>
