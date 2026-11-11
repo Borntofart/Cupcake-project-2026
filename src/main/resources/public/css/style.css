@@ -701,3 +701,65 @@ td {
         height: 220px;
     }
 }
+
+
+/* INTERAKTIV CUPCAKE */
+
+.builder {
+    max-width: 1050px;
+}
+
+.cupcake-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.cupcake-preview {
+    background: #f2eaf4;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.cupcake {
+    width: 240px;
+    height: 260px;
+    position: relative;
+    margin: 30px auto;
+}
+
+.frosting {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 200px;
+    height: 125px;
+    background: #e58ead;
+    border-radius: 60% 60% 35% 35%;
+    z-index: 2;
+}
+
+.cake-bottom {
+    position: absolute;
+    bottom: 15px;
+    left: 40px;
+    width: 160px;
+    height: 130px;
+    background: #754329;
+    clip-path: polygon(
+            0 0,
+            100% 0,
+            85% 100%,
+            15% 100%
+    );
+    border-radius: 8px;
+}
+
+@media (max-width: 700px) {
+    .cupcake-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
