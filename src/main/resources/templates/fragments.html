@@ -65,6 +65,13 @@
                   class="user-info">
             </span>
 
+            <span th:if="${currentUser != null}"
+                  class="user-info">
+    Saldo:
+    <strong th:text="${currentUser.balance}"></strong>
+    kr.
+</span>
+
             <a href="/Cart">
                 🛒 Kurv (<span th:text="${Cart.count}">0</span>)
             </a>

@@ -10,13 +10,13 @@
     <h1>Administration</h1>
 
     <div class="admin-layout">
-        <aside class="admin-menu">
+        <aside class="admin-sidebar">
             <a href="/admin/orders">Ordrer</a>
             <a href="/admin/customers" class="active">Kunder</a>
             <a href="/">Forside</a>
         </aside>
 
-        <section>
+        <section class="admin-content">
             <h2>Kunder</h2>
 
             <p th:if="${customers == null or customers.empty}">
